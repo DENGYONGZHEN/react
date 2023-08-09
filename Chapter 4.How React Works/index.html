@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React</title>
+  </head>
+  <body>
+    <!-- Target container -->
+    <root id="root"></root>
+
+    <!-- React library & ReactDOM (Development Version)-->
+    <script src="https://unpkg.com/react@18.0.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.0.0/umd/react-dom.development.js"></script>
+    <!-- 浏览器不支持jsx，如果编写了jsx代码，还需引入babel -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- 代码中包含jsx 就要加上 type="text/babel" -->
+    <script type="text/babel">
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+
+      //jsx 可以赋值给变量
+      const bread = <h1>Baked Salmon</h1>;
+      root.render(bread);
+
+      //第一种写法
+      // const div = React.createElement(
+      //   'div',
+      //   { id: 'recipe-0' },
+      //   'Baked Salmon'
+      // );
+      // ReactDOM.render(div, document.getElementById('root'));
+      // console.log(div);
+    </script>
+  </body>
+</html>
