@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- Target container -->
+    <root id="root"></root>
+
+    <!-- React library & ReactDOM (Development Version)-->
+    <script src="https://unpkg.com/react@18.0.0/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18.0.0/umd/react-dom.development.js"></script>
+    <!-- 浏览器不支持jsx，如果编写了jsx代码，还需引入babel -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!-- 代码中包含jsx 就要加上 type="text/babel" -->
+    <script type="text/babel">
+      /**
+     DOM elements and Reactelements may look the same, 
+     but they’re actually quite different. A React element is a description of 
+     what the actual DOM element should look like. 
+     In other words, React elements are the instructions for how the browser DOM 
+     should be created.*/
+
+      /**
+      * The first argument defines the type of element we want to create. In
+        this case, we want to create an h1 element. The second argument
+        represents the element’s properties. This h1 currently has an id of
+        recipe-0. The third argument represents the element’s children: any
+        nodes that are inserted between the opening and closing tag (in this
+        case, just some text).
+     */
+      const bread = React.createElement(
+        'h1',
+        { id: 'recipe-0' },
+        'Baked Salmon'
+      );
+
+      /*
+      {
+        $$typeof: Symbol(React.element),
+        "type": "h1",
+        "key": null,
+        "ref": null,
+        "props": {id: "recipe-0", children: "Baked Salmon"},
+        "_owner": null,
+        "_store": {}
+       }
+       
+       There are fields that are used
+       by React: _owner, _store, and $$typeof
+      */
+      console.log(bread);
+    </script>
+  </body>
+</html>
