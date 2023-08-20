@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Task.less';
+import { connect } from 'react-redux';
+import { action } from '../store/action/index';
 import { getTaskList, postTask, deleteTask, patchTaskList } from '../api/index';
 import {
   Button,
@@ -28,7 +30,13 @@ const formateDate = function (date) {
   )}`;
 };
 
-const Task = function Task() {
+const Task = function Task(props) {
+  /**
+   * 获取基于属性传递进来的公共状态和actionCreator
+   */
+
+  let { taskList, queryAllList, deleteTaskById, updateTaskById } = props;
+
   const [selectValue, setSelectValue] = useState(0);
   const [tableData, setTableData] = useState([]);
   const [tableLoading, setTableLoading] = useState(false);
@@ -36,24 +44,29 @@ const Task = function Task() {
   const [confirmLoading, setConfirmLoading] = useState(false);
   let [formInstance] = Form.useForm();
 
+  /**第一次渲染完毕，要判断store中是否有taskList。没有的话进行异步派发 */
   useEffect(() => {
-    queryData();
-  }, [selectValue]);
+    (async () => {
+      if (!taskList) {
+        setTableLoading(true);
+        await queryAllList();
+        setTableLoading(false);
+      }
+    })();
+  }, []);
 
-  /**
-   * 请求服务器的数据
-   */
-  const queryData = async () => {
-    try {
-      //开启加载显示
-      setTableLoading(true);
-      //发起请求
-      let { code, list } = await getTaskList(selectValue);
-      if (+code !== 0) list = [];
-      setTableData(list);
-    } catch (_) {}
-    setTableLoading(false);
-  };
+  /**依赖于store中的taskList和 selectValue 对数据删选进行显示 */
+
+  useEffect(() => {
+    if (!taskList) {
+      setTableData([]);
+      return;
+    }
+    if (selectValue !== 0) {
+      taskList = taskList.filter((task) => +task.state === +selectValue);
+    }
+    setTableData(taskList);
+  }, [taskList, selectValue]);
 
   const closeModal = () => {
     setModalVisable(false);
@@ -78,7 +91,7 @@ const Task = function Task() {
       } else {
         message.success('submit success');
         closeModal();
-        queryData();
+        queryAllList();
       }
     } catch (error) {
       message.error('表单验证失败');
@@ -93,7 +106,7 @@ const Task = function Task() {
       if (+code !== 0) {
         message.error('delete failed!');
       } else {
-        queryData();
+        deleteTaskById(id);
         message.success('delete success');
       }
     } catch (_) {}
@@ -107,7 +120,8 @@ const Task = function Task() {
       if (+code !== 0) {
         message.error('update failed!');
       } else {
-        queryData();
+        // queryData();
+        updateTaskById(id);
         message.success('update success');
       }
     } catch (_) {}
@@ -260,4 +274,4 @@ const Task = function Task() {
   );
 };
 
-export default Task;
+export default connect((state) => state.task, action.task)(Task);
